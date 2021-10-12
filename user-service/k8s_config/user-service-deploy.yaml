@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-deploy
+  labels:
+    name: user-service-deploy
+    app: ctc-rest-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: user-service-pod
+      app: ctc-rest-app
+  template:
+    metadata:
+      name: user-service-pod  
+      labels:
+        name: user-service-pod
+        app: ctc-rest-app
+    spec:
+      containers:
+        - name: user-service
+          image: smcontainerreg.azurecr.io/images/user-service
+          ports:
+            - containerPort: 8083
