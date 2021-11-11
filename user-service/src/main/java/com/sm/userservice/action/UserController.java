@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.microsoft.applicationinsights.TelemetryClient;
 import com.sm.userservice.dao.UserRepository;
-import com.sm.userservice.model.LibUser;
+import com.sm.userservice.model.SiteUser;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -25,9 +26,12 @@ public class UserController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+    private TelemetryClient telemetryClient;
+
 	
 	@GetMapping("/users")
-	  public Flux<LibUser> getAllUsers(@RequestParam(required = false) String fname) {
+	  public Flux<SiteUser> getAllUsers(@RequestParam(required = false) String fname) {
 		logger.info("retrieving users...");
 	    try {
 	      if (fname == null) {
@@ -43,23 +47,24 @@ public class UserController {
 	  }
 
 	  @GetMapping("/users/{id}")
-	  public Mono<ResponseEntity<LibUser>> getBookById(@PathVariable("id") int id) {
-	    Mono<LibUser> userData = userRepository.findById(id);
-	    logger.info("user got...");
-	    return userData.map(result -> ResponseEntity.ok(result)).defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	  public Mono<ResponseEntity<SiteUser>> getUserById(@PathVariable("id") int id) {
+		  telemetryClient.trackEvent(String.format("get user by ID: {%s}", id));
+		  Mono<SiteUser> userData = userRepository.findById(id);
+		  return userData.map(result -> ResponseEntity.ok(result)).defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	  }
 
 	  @PostMapping("/users")
-	  public Mono<ResponseEntity<LibUser>> createBook(@RequestBody LibUser user) {
-    	Mono<LibUser> libUser = userRepository.save(new LibUser(user.getFname(), user.getLname(), user.getAge()));
+	  public Mono<ResponseEntity<SiteUser>> createUser(@RequestBody SiteUser user) {
+		logger.info("new user==>"+user);
+    	Mono<SiteUser> libUser = userRepository.save(new SiteUser(user.getFname(), user.getLname(), user.getAge()));
     	logger.info("new user created...");
     	return libUser.map(result -> ResponseEntity.ok(result))
     			.defaultIfEmpty(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
 	  }
 
 	  @PutMapping("/users/{id}")
-	  public Mono<ResponseEntity<LibUser>> updateBook(@PathVariable("id") int id, @RequestBody LibUser user) {
-	    Mono<LibUser> userData = userRepository.findById(id);
+	  public Mono<ResponseEntity<SiteUser>> updateUser(@PathVariable("id") int id, @RequestBody SiteUser user) {
+	    Mono<SiteUser> userData = userRepository.findById(id);
 	    logger.info("updating user...");
 	    return userData.map(result -> ResponseEntity.ok(result))
 	    	.defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));

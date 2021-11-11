@@ -5,16 +5,15 @@ server:
    port: 8083
 logging:
    application-insights:
-      instrumentation-key: 2f53fcd9-b604-4e4e-947f-608701dbabd4      
+      instrumentation-key: 053ee39c-c27f-4563-b77c-57f96c20ed45      
    level:
       root: INFO
       org.epam: DEBUG   
-# Specify the DNS URI of your Azure Cosmos DB, access key, DB id
 azure:
    application-insights:
-      instrumentation-key: 2f53fcd9-b604-4e4e-947f-608701dbabd4      
+      instrumentation-key: 053ee39c-c27f-4563-b77c-57f96c20ed45      
    cosmos:
-      uri: https://smdata.documents.azure.com:443/
-      key: hHeTPRstY0ySOm1guY7dTmQz8AKaokW4CMyOhqUN6F9Rpy8mRNLAznMcpg0KSot9KxZjHdqp2xA6z2QAD22kFw==
+      uri: https://smcosmoacc.documents.azure.com:443/
+      key: g9uglPPJcoUbhk6mwTn3JIfe6FG3oLmOq8rLCOS7sbSQeApOTmdTGA8GsSLxnRQbRJ91GTCO2mGZVtNNPzf6mw==
       database: smcosmodb
       populateQueryMetrics: true

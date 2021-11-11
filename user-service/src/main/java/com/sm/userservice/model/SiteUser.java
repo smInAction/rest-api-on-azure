@@ -5,21 +5,28 @@ import org.springframework.data.annotation.Id;
 import com.azure.spring.data.cosmos.core.mapping.Container;
 import com.azure.spring.data.cosmos.core.mapping.GeneratedValue;
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Container(containerName = "smcosmocollection")
-public class LibUser {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class SiteUser {
 	@Id
 	@GeneratedValue
+	@JsonProperty("id")
 	private String id;
+	@JsonProperty("fname")
 	private String fname;
 	@PartitionKey
+	@JsonProperty("lname")
 	private String lname;
+	@JsonProperty("age")
 	private String age;
 	
-	public LibUser() {
+	public SiteUser() {
 	}
 	
-	public LibUser(String fname, String lname, String age){
+	public SiteUser(String fname, String lname, String age){
 		this.fname = fname;
 		this.lname = lname;
 		this.age = age;
@@ -48,10 +55,11 @@ public class LibUser {
 	public String getLname() {
 		return lname;
 	}
+
 	@Override
 	public String toString() {
 		String str = new StringBuilder("[").append(fname).append(", ").append(lname).append(", ")
-				.append(age).append("]").toString();
+				.append(age).append(",").append("]").toString();
 		return str;
 	}
 }
