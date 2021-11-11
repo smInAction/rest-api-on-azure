@@ -4,14 +4,14 @@ metadata:
   name: user-service
   labels:
     name: user-service-svc
-    app: ctc-rest-app
+    app: ctc-odp
 spec:
   type: LoadBalancer
   ports:
     - port: 8083
       targetPort: 8083
-      nodePort: 31003
+      nodePort: 31033
   selector:
     name: user-service-pod
-    app: ctc-rest-app  
+    app: ctc-odp
   
